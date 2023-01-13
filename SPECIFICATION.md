@@ -22,4 +22,4 @@ The main program responsible for controlling the setup, teardown and execution o
 
 ## communication
 
-Communication is achieved using JSON payloads in HTTP requests.
+Communication is achieved using JSON payloads in HTTP requests. Once the docker environment is ready, the workflow can be started. The control interface sends a request to the implant telling it which script to start and giving it the required parameters, which are passed over to the script using STDIN. Once execution completes, the implant sends a request to the UI with the results of the script obtained from STDOUT and STDERR. Data is once again passed in a JSON format that the script or ui can parse to extract results.
