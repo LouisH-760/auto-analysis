@@ -19,3 +19,7 @@ The main program responsible for controlling the setup, teardown and execution o
 ## External interface
 
 ## Docker implant
+
+## communication
+
+Communication is achieved using JSON payloads in HTTP requests.
