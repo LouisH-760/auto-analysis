@@ -17,24 +17,20 @@ type response struct {
 	Message string `json:"message"`
 }
 
+var notFoundResponse response = response{ // can't const a struct yay
+	Status:  false,
+	Message: "URL or Method invalid",
+}
+
+var pongResponse response = response{
+	Status:  true,
+	Message: "pong",
+}
+
 func serverError(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("{}")) // be polite and still send actual JSON back
-}
-
-func pong() response {
-	return response{
-		Status:  true,
-		Message: "pong",
-	}
-}
-
-func notFound() response {
-	return response{
-		Status:  false,
-		Message: "URL or Method invalid",
-	}
 }
 
 func sendResponse(res response, status int, w http.ResponseWriter) {
@@ -55,9 +51,9 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	// handle requests on a one-by-one basis, there really arent that many...
 	// refactor to a switch or two for method and URL if this needs more than the actual endpoint and a test one
 	if r.Method == "GET" && r.URL.Path == "/ping" {
-		sendResponse(pong(), http.StatusOK, w)
+		sendResponse(pongResponse, http.StatusOK, w)
 	} else {
-		sendResponse(notFound(), http.StatusNotFound, w)
+		sendResponse(notFoundResponse, http.StatusNotFound, w)
 	}
 }
 
