@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -9,7 +11,7 @@ import (
 type command struct {
 	Name      string `json:"name"`
 	Script    string `json:"script"`
-	Arguments string `json:"arguments"`
+	Arguments string `json:"arguments"` // base64 encoded to avoid breaking json or cli arguments; plugins should decode the base64
 }
 
 type response struct {
@@ -44,11 +46,30 @@ func sendResponse(res response, w http.ResponseWriter) {
 		return
 	}
 	w.WriteHeader(res.StatusCode)
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json") // seems to not be respected??
 	w.Write([]byte(out))
 }
 
 func startCommand(r *http.Request) response {
+	body, err := ioutil.ReadAll(r.Body) // try to read the request body into a variable
+	if err != nil {
+		return response{
+			Status:     false,
+			StatusCode: http.StatusInternalServerError,
+			Message:    fmt.Sprintf("Could not read request body: %s", err.Error()),
+		}
+	}
+
+	var cmd command
+	err = json.Unmarshal(body, &cmd) // try to coax the body from JSON into a command object
+	if err != nil {
+		return response{
+			Status:     false,
+			StatusCode: http.StatusInternalServerError,
+			Message:    fmt.Sprintf("Could not parse request body: %s", err.Error()),
+		}
+	}
+
 	return response{
 		Status:     false,
 		StatusCode: http.StatusNotImplemented,
