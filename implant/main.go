@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 )
 
@@ -73,6 +74,15 @@ func startCommand(r *http.Request) response {
 	}
 
 	modpath := fmt.Sprintf("./modules/%s", cmd.Script)
+	if _, err := os.Stat(modpath); err != nil {
+		log.Printf("Module not found or inaccessible: %s", modpath)
+		return response{
+			Status:     false,
+			StatusCode: http.StatusNotFound,
+			Message:    fmt.Sprintf("Module not found or inaccessible: %s (%s)", modpath, err.Error()),
+		}
+	}
+
 	log.Printf("Running %s", modpath)
 	result, err := exec.Command("python3", modpath, cmd.Arguments).Output() // attempt to run the python module
 	if err != nil {
