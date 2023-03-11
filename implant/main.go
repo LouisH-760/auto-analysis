@@ -40,7 +40,6 @@ func sendResponse(res response, status int, w http.ResponseWriter) {
 		serverError(w)
 		return
 	}
-	log.Printf("Sending %s\n", out)
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(out))
