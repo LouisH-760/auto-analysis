@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
 )
 
 type command struct {
@@ -61,7 +63,7 @@ func startCommand(r *http.Request) response {
 	}
 
 	var cmd command
-	err = json.Unmarshal(body, &cmd) // try to coax the body from JSON into a command object
+	err = json.Unmarshal(body, &cmd) // try to coax the body from JSON into a command object, ignores unknown fields
 	if err != nil {
 		return response{
 			Status:     false,
@@ -70,10 +72,20 @@ func startCommand(r *http.Request) response {
 		}
 	}
 
+	result, err := exec.Command("ls").Output()
+	if err != nil {
+		return response{
+			Status:     false,
+			StatusCode: http.StatusInternalServerError,
+			Message:    fmt.Sprintf("Could not run the module: %s", err.Error()),
+		}
+	}
+
+	enc := base64.StdEncoding.EncodeToString(result) // encode results to base64 to not have any funky chars in HTTP responses
 	return response{
-		Status:     false,
-		StatusCode: http.StatusNotImplemented,
-		Message:    "Function not yet implemented",
+		Status:     true,
+		StatusCode: http.StatusOK,
+		Message:    enc,
 	}
 }
 
