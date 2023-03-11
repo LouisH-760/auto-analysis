@@ -72,7 +72,8 @@ func startCommand(r *http.Request) response {
 		}
 	}
 
-	result, err := exec.Command("python3", cmd.Script, cmd.Arguments).Output() // attempt to run the python module
+	modpath := fmt.Sprintf("./modules/%s", cmd.Script)
+	result, err := exec.Command("python3", modpath, cmd.Arguments).Output() // attempt to run the python module
 	if err != nil {
 		return response{
 			Status:     false,
