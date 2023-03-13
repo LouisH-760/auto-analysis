@@ -21,6 +21,18 @@ func modules() map[string]module {
 		aptadds: []string{"unzip"},
 		build:   []string{"wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip -O volatility.zip", "unzip volatility.zip", "mv ./volatility_2.6_lin64_standalone/volatility_2.6_lin64_standalone /usr/bin/volatility", "rm volatility.zip"},
 	}
+	mods["yara"] = module{
+		gitrepo: "https://github.com/VirusTotal/yara",
+		usegit:  false,
+		aptadds: []string{"yara"},
+		build:   []string{},
+	}
+	mods["clamav"] = module{
+		gitrepo: "https://github.com/Cisco-Talos/clamav",
+		usegit:  false,
+		aptadds: []string{},
+		build:   []string{"wget https://www.clamav.net/downloads/production/clamav-1.0.1.linux.x86_64.deb -O clamav.deb", "sudo dpkg -i clamav.deb", "rm clamav.deb"},
+	}
 	return mods
 }
 
