@@ -1,10 +1,16 @@
 package main
 
+import (
+	"flag"
+	"fmt"
+)
+
 type module struct { // defined modules for installation in the docker file
 	gitrepo string   // git repo url
 	usegit  bool     // clone the git repo to build/install?
 	aptadds []string // dependencies to get through apt
 	build   []string // actual build commands outside of cloning and moving into the repo
+	used    *bool    // wether the flag should be used, defined using arguments
 }
 
 func modules() map[string]module {
@@ -39,5 +45,11 @@ func modules() map[string]module {
 func main() {
 	image := "ubuntu:jammy"
 	mods := modules()
-
+	sample := flag.String("sample", "", "Path to the sample")
+	modfolder := flag.String("modules", "./modules", "path to the modules folder. Default: ./modules")
+	for name, mod := range mods {
+		mod.used = flag.Bool(name, false, fmt.Sprintf("Build the docker container with support for the %s module (%s)", name, mod.gitrepo)) // can't do mod[name].used directly, so use the object copy and assign it in place
+		mods[name] = mod
+	}
+	flag.Parse()
 }
