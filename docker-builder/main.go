@@ -13,7 +13,13 @@ func modules() map[string]module {
 		gitrepo: "https://github.com/rizinorg/rizin",
 		usegit:  true,
 		aptadds: []string{"meson", "ninja-build"},
-		build:   []string{"meson --buildtype=release build", "ninja -C build", "ninja -C build install"},
+		build:   []string{"meson --buildtype=release --prefix=/usr build", "ninja -C build", "ninja -C build install"},
+	}
+	mods["volatility2"] = module{ // specifically get the last volatility 2 standalone version
+		gitrepo: "https://github.com/volatilityfoundation/volatility.git",
+		usegit:  false,
+		aptadds: []string{"unzip"},
+		build:   []string{"wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip -O volatility.zip", "unzip volatility.zip", "mv ./volatility_2.6_lin64_standalone/volatility_2.6_lin64_standalone /usr/bin/volatility", "rm volatility.zip"},
 	}
 	return mods
 }
