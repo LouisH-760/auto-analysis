@@ -19,7 +19,7 @@ func modules() map[string]module {
 		gitrepo: "https://github.com/volatilityfoundation/volatility.git",
 		usegit:  false,
 		aptadds: []string{"unzip"},
-		build:   []string{"wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip -O volatility.zip", "unzip volatility.zip", "mv ./volatility_2.6_lin64_standalone/volatility_2.6_lin64_standalone /usr/bin/volatility", "rm volatility.zip"},
+		build:   []string{"wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip -O volatility.zip", "unzip volatility.zip", "mv ./volatility_2.6_lin64_standalone/volatility_2.6_lin64_standalone /usr/bin/volatility2", "rm volatility.zip"},
 	}
 	mods["yara"] = module{
 		gitrepo: "https://github.com/VirusTotal/yara",
