@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"path"
+	"strings"
 )
 
 type module struct { // defined modules for installation in the docker file
@@ -55,6 +57,28 @@ func modules() map[string]module {
 	return mods
 }
 
+func aptList(mods map[string]module) []string {
+	pkgs := []string{"git", "python3"}
+	for _, mod := range mods {
+		if *mod.used {
+			pkgs = append(pkgs, mod.aptadds...)
+		}
+	}
+	return pkgs
+}
+
+func dockerFile(image string, sample string, modfolder string, mods map[string]module) string {
+	// image thing
+	header := fmt.Sprintf("FROM %s AS auto-analysis", image)
+	// file things
+	workdir := "WORKDIR /autoa"
+	copysample := fmt.Sprintf("COPY %s /autoa/%s", sample, path.Base(sample))
+	// apt stuff
+	pkgs := aptList(mods)
+	aptcmd := fmt.Sprintf("apt update && apt install -y %s", strings.Join(pkgs, " "))
+	return aptcmd
+}
+
 func main() {
 	image := "ubuntu:jammy"
 	mods := modules()
@@ -66,4 +90,6 @@ func main() {
 		mods[name] = mod
 	}
 	flag.Parse()
+	dockerfile := dockerFile(image, *sample, *modfolder, mods)
+	fmt.Print(dockerfile)
 }
