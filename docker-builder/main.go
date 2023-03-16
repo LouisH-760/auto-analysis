@@ -60,7 +60,7 @@ func modules() map[string]module {
 }
 
 func aptList(mods map[string]module) []string {
-	pkgs := []string{"git", "python3", "golang-go"}
+	pkgs := []string{"git", "python3", "golang-go", "wget"}
 	for _, mod := range mods {
 		if *mod.used {
 			pkgs = append(pkgs, mod.aptadds...)
