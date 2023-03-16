@@ -70,14 +70,14 @@ func aptList(mods map[string]module) []string {
 func buildcmd(mod module, name string) string {
 	fcmd := []string{}
 	if mod.usegit {
-		fcmd = append(fcmd, fmt.Sprintf("RUN git clone %s %s\nWORKDIR %s", mod.gitrepo, name, name))
+		fcmd = append(fcmd, fmt.Sprintf("RUN git clone \"%s\" \"%s\"\nWORKDIR \"%s\"", mod.gitrepo, name, name))
 	}
 	for _, cmd := range mod.build {
 		fcmd = append(fcmd, fmt.Sprintf("RUN %s", cmd))
 	}
 	if mod.usegit {
 		fcmd = append(fcmd, "WORKDIR ..")
-		fcmd = append(fcmd, fmt.Sprintf("RUN rm -rf %s", name))
+		fcmd = append(fcmd, fmt.Sprintf("RUN rm -rf \"%s\"", name))
 	}
 	return strings.Join(fcmd, "\n")
 }
