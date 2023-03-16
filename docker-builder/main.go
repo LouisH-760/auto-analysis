@@ -115,8 +115,10 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	fbuild := strings.Join(buildcmds, "\n")
 	// port
 	expose := fmt.Sprintf("EXPOSE %d", port)
+	// entrypoint
+	entry := "ENTRYPOINT [\"/usr/bin/implant\"]"
 	// format the Dockerfile
-	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, icmd, fbuild, expose)
+	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, icmd, fbuild, expose, entry)
 	return df
 }
 
