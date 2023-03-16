@@ -67,16 +67,38 @@ func aptList(mods map[string]module) []string {
 	return pkgs
 }
 
+func buildcmd(mod module, name string) string {
+	fcmd := []string{}
+	if mod.usegit {
+		fcmd = append(fcmd, fmt.Sprintf("RUN git clone %s %s\nWORKDIR %s", mod.gitrepo, name, name))
+	}
+	for _, cmd := range mod.build {
+		fcmd = append(fcmd, fmt.Sprintf("RUN %s", cmd))
+	}
+	if mod.usegit {
+		fcmd = append(fcmd, "WORKDIR ..")
+	}
+	return strings.Join(fcmd, "\n")
+}
+
 func dockerFile(image string, sample string, modfolder string, mods map[string]module) string {
 	// image thing
 	header := fmt.Sprintf("FROM %s AS auto-analysis", image)
 	// file things
 	workdir := "WORKDIR /autoa"
-	copysample := fmt.Sprintf("COPY %s /autoa/%s", sample, path.Base(sample))
+	copysample := fmt.Sprintf("COPY \"%s\" \"/autoa/%s\"", sample, path.Base(sample))
 	// apt stuff
 	pkgs := aptList(mods)
 	aptcmd := fmt.Sprintf("RUN apt update && apt install -y %s", strings.Join(pkgs, " "))
-	df := fmt.Sprintf("%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd)
+	// build commands for relevant packages
+	buildcmds := []string{}
+	for name, mod := range mods {
+		if *mod.used && len(mod.build) > 0 {
+			buildcmds = append(buildcmds, buildcmd(mod, name))
+		}
+	}
+	fbuild := strings.Join(buildcmds, "\n")
+	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, fbuild)
 	return df
 }
 
