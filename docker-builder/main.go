@@ -126,6 +126,7 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 }
 
 func runCmdStreamOutput(name string, args ...string) {
+	// https://stackoverflow.com/questions/30725751/streaming-commands-output-progress
 	cmd := exec.Command(name, args...)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
