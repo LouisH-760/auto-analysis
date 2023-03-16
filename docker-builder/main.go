@@ -100,6 +100,7 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	// file things
 	workdir := "WORKDIR /autoa"
 	copysample := fmt.Sprintf("COPY \"%s\" \"/autoa/%s\"", sample, path.Base(sample))
+	copymods := fmt.Sprintf("COPY \"%s\" \"/autoa/modules/\"", modfolder)
 	// apt stuff
 	pkgs := aptList(mods)
 	aptcmd := fmt.Sprintf("RUN apt update && apt install -y %s", strings.Join(pkgs, " "))
@@ -118,7 +119,7 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	// entrypoint
 	entry := "ENTRYPOINT [\"/usr/bin/implant\"]"
 	// format the Dockerfile
-	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, icmd, fbuild, expose, entry)
+	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, copymods, aptcmd, icmd, fbuild, expose, entry)
 	return df
 }
 
