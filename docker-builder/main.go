@@ -125,22 +125,22 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	return df
 }
 
-func runCmdStreamOutput(name string, args ...string) {
+func runCmdStreamOutput(name string, args ...string) error {
 	// https://stackoverflow.com/questions/30725751/streaming-commands-output-progress
 	cmd := exec.Command(name, args...)
-	stdout, err := cmd.StdoutPipe()
+	stdout, err := cmd.StdoutPipe() // get pipe from stdout
 	if err != nil {
 		fmt.Printf("Could not get stdout pipe: %s", err.Error())
 		return
 	}
 	cmd.Stderr = cmd.Stdout // set stderr output to show up on stdout
-	cmd.Start()
+	cmd.Start()             // start the command
 	pipeScan := bufio.NewScanner(stdout)
 	for pipeScan.Scan() {
 		line := pipeScan.Text()
 		fmt.Println(line)
 	}
-	cmd.Wait()
+	return cmd.Wait() // wait on the command to exit
 }
 
 func main() {
