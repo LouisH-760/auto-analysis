@@ -19,7 +19,7 @@ type module struct { // defined modules for installation in the docker file
 
 func modules() map[string]module {
 	mods := make(map[string]module)
-	mods["rizin"] = module{
+	mods["rizin"] = module{ // should grab a specific version (deb?) instead of building from source from main
 		gitrepo: "https://github.com/rizinorg/rizin",
 		usegit:  true,
 		aptadds: []string{"meson", "ninja-build"},
@@ -50,7 +50,7 @@ func modules() map[string]module {
 		gitrepo: "https://github.com/Cisco-Talos/clamav",
 		usegit:  false,
 		aptadds: []string{},
-		build: []string{
+		build: []string{ // grab a specific clamav version (latest at the time of writing)
 			"wget https://www.clamav.net/downloads/production/clamav-1.0.1.linux.x86_64.deb -O clamav.deb",
 			"sudo dpkg -i clamav.deb",
 			"rm clamav.deb",
