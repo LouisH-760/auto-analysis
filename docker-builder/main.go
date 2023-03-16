@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"path"
 	"strings"
-
-	"github.com/otiai10/copy"
 )
 
 type module struct { // defined modules for installation in the docker file
@@ -149,8 +147,8 @@ func main() {
 	image := "ubuntu:jammy"
 	implantrepo := "https://github.com/LouisH-760/auto-analysis"
 	mods := modules()
-	sample := flag.String("sample", "", "Path to the sample")
-	modfolder := flag.String("modules", "", "path to the modules folder.")
+	sample := flag.String("sample", "", "Path to the sample. Must be in the docker context.")
+	modfolder := flag.String("modules", "", "path to the modules folder. Must be in the docker context.")
 	port := 8080
 	for name, mod := range mods {
 		// can't do mod[name].used directly, so use the object copy and assign it in place
@@ -167,7 +165,6 @@ func main() {
 		return
 	}
 	// copy modules folder locally
-	copy.Copy(*modfolder, "./modules")
-	dockerfile := dockerFile(image, *sample, "./modules/", mods, port, implantrepo)
+	dockerfile := dockerFile(image, *sample, *modfolder, mods, port, implantrepo)
 	fmt.Printf("%s\n", dockerfile)
 }
