@@ -75,8 +75,9 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	copysample := fmt.Sprintf("COPY %s /autoa/%s", sample, path.Base(sample))
 	// apt stuff
 	pkgs := aptList(mods)
-	aptcmd := fmt.Sprintf("apt update && apt install -y %s", strings.Join(pkgs, " "))
-	return aptcmd
+	aptcmd := fmt.Sprintf("RUN apt update && apt install -y %s", strings.Join(pkgs, " "))
+	df := fmt.Sprintf("%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd)
+	return df
 }
 
 func main() {
@@ -91,5 +92,5 @@ func main() {
 	}
 	flag.Parse()
 	dockerfile := dockerFile(image, *sample, *modfolder, mods)
-	fmt.Print(dockerfile)
+	fmt.Printf("%s\n", dockerfile)
 }
