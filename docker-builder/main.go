@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"os/exec"
 	"path"
 	"strings"
 )
@@ -121,6 +123,23 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	// format the Dockerfile
 	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, copymods, aptcmd, icmd, fbuild, expose, entry)
 	return df
+}
+
+func runCmdStreamOutput(name string, args ...string) {
+	cmd := exec.Command(name, args...)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Printf("Could not get stdout pipe: %s", err.Error())
+		return
+	}
+	cmd.Stderr = cmd.Stdout // set stderr output to show up on stdout
+	cmd.Start()
+	pipeScan := bufio.NewScanner(stdout)
+	for pipeScan.Scan() {
+		line := pipeScan.Text()
+		fmt.Println(line)
+	}
+	cmd.Wait()
 }
 
 func main() {
