@@ -58,7 +58,7 @@ func modules() map[string]module {
 }
 
 func aptList(mods map[string]module) []string {
-	pkgs := []string{"git", "python3"}
+	pkgs := []string{"git", "python3", "golang-go"}
 	for _, mod := range mods {
 		if *mod.used {
 			pkgs = append(pkgs, mod.aptadds...)
@@ -81,7 +81,7 @@ func buildcmd(mod module, name string) string {
 	return strings.Join(fcmd, "\n")
 }
 
-func dockerFile(image string, sample string, modfolder string, mods map[string]module) string {
+func dockerFile(image string, sample string, modfolder string, mods map[string]module, port int) string {
 	// image thing
 	header := fmt.Sprintf("FROM %s AS auto-analysis", image)
 	// file things
@@ -98,7 +98,10 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 		}
 	}
 	fbuild := strings.Join(buildcmds, "\n")
-	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, fbuild)
+	// port
+	expose := fmt.Sprintf("EXPOSE %d", port)
+	// format the Dockerfile
+	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, fbuild, expose)
 	return df
 }
 
@@ -107,12 +110,13 @@ func main() {
 	mods := modules()
 	sample := flag.String("sample", "", "Path to the sample")
 	modfolder := flag.String("modules", "./modules", "path to the modules folder. Default: ./modules")
+	port := 8080
 	for name, mod := range mods {
 		// can't do mod[name].used directly, so use the object copy and assign it in place
 		mod.used = flag.Bool(name, false, fmt.Sprintf("Build the docker container with support for the %s module (%s)", name, mod.gitrepo))
 		mods[name] = mod
 	}
 	flag.Parse()
-	dockerfile := dockerFile(image, *sample, *modfolder, mods)
+	dockerfile := dockerFile(image, *sample, *modfolder, mods, port)
 	fmt.Printf("%s\n", dockerfile)
 }
