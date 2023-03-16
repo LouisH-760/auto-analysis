@@ -135,6 +135,10 @@ func main() {
 		mods[name] = mod
 	}
 	flag.Parse()
+	if len(*sample) < 1 {
+		fmt.Print("The -sample flag is mandatory! and may not be empty\n")
+		return
+	}
 	dockerfile := dockerFile(image, *sample, *modfolder, mods, port, implantrepo)
 	fmt.Printf("%s\n", dockerfile)
 }
