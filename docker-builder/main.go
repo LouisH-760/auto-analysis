@@ -77,11 +77,24 @@ func buildcmd(mod module, name string) string {
 	}
 	if mod.usegit {
 		fcmd = append(fcmd, "WORKDIR ..")
+		fcmd = append(fcmd, fmt.Sprintf("RUN rm -rf %s", name))
 	}
 	return strings.Join(fcmd, "\n")
 }
 
-func dockerFile(image string, sample string, modfolder string, mods map[string]module, port int) string {
+func implantcmd(repo string) string {
+	fcmd := []string{
+		fmt.Sprintf("RUN git clone %s implant", repo),
+		"WORKDIR implant/implant",
+		"RUN go build .",
+		"RUN mv implant /usr/bin",
+		"WORKDIR ../..",
+		"RUN rm implant -r",
+	}
+	return strings.Join(fcmd, "\n")
+}
+
+func dockerFile(image string, sample string, modfolder string, mods map[string]module, port int, implantrepo string) string {
 	// image thing
 	header := fmt.Sprintf("FROM %s AS auto-analysis", image)
 	// file things
@@ -90,6 +103,8 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	// apt stuff
 	pkgs := aptList(mods)
 	aptcmd := fmt.Sprintf("RUN apt update && apt install -y %s", strings.Join(pkgs, " "))
+	// build the implant
+	icmd := implantcmd(implantrepo)
 	// build commands for relevant packages
 	buildcmds := []string{}
 	for name, mod := range mods {
@@ -101,12 +116,13 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	// port
 	expose := fmt.Sprintf("EXPOSE %d", port)
 	// format the Dockerfile
-	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, fbuild, expose)
+	df := fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n%s", header, workdir, copysample, aptcmd, icmd, fbuild, expose)
 	return df
 }
 
 func main() {
 	image := "ubuntu:jammy"
+	implantrepo := "https://github.com/LouisH-760/auto-analysis"
 	mods := modules()
 	sample := flag.String("sample", "", "Path to the sample")
 	modfolder := flag.String("modules", "./modules", "path to the modules folder. Default: ./modules")
@@ -117,6 +133,6 @@ func main() {
 		mods[name] = mod
 	}
 	flag.Parse()
-	dockerfile := dockerFile(image, *sample, *modfolder, mods, port)
+	dockerfile := dockerFile(image, *sample, *modfolder, mods, port, implantrepo)
 	fmt.Printf("%s\n", dockerfile)
 }
