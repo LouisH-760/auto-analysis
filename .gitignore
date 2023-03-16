@@ -1,2 +1,4 @@
 implant/modules
+docker-builder/modules
 Dockerfile
+sample.*
