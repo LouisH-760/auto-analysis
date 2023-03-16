@@ -131,7 +131,7 @@ func runCmdStreamOutput(name string, args ...string) error {
 	stdout, err := cmd.StdoutPipe() // get pipe from stdout
 	if err != nil {
 		fmt.Printf("Could not get stdout pipe: %s", err.Error())
-		return
+		return err
 	}
 	cmd.Stderr = cmd.Stdout // set stderr output to show up on stdout
 	cmd.Start()             // start the command
