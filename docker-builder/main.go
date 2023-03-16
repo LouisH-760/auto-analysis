@@ -52,7 +52,7 @@ func modules() map[string]module {
 		aptadds: []string{},
 		build: []string{ // grab a specific clamav version (latest at the time of writing)
 			"wget https://www.clamav.net/downloads/production/clamav-1.0.1.linux.x86_64.deb -O clamav.deb",
-			"sudo dpkg -i clamav.deb",
+			"dpkg -i clamav.deb",
 			"rm clamav.deb",
 		},
 	}
