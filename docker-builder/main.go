@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"os"
 	"os/exec"
 	"path"
 	"strings"
@@ -176,6 +177,10 @@ func main() {
 	// copy modules folder locally
 	dockerfile := dockerFile(image, *sample, *modfolder, mods, port, implantrepo)
 	if *runct {
+		if err := os.WriteFile("Dockerfile", []byte(dockerfile), 0644); err != nil {
+			fmt.Printf("Could not write Dockerfile: %s", err.Error())
+			return
+		}
 
 		if err := build(); err != nil {
 			fmt.Printf("Error while building the container: %s\n", err.Error())
