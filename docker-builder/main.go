@@ -143,12 +143,21 @@ func runCmdStreamOutput(name string, args ...string) error {
 	return cmd.Wait() // wait on the command to exit
 }
 
+func build() error {
+	return runCmdStreamOutput("docker", "build", ".", "-t", "auto-analysis", "--no-cache")
+}
+
+func run(port int) error {
+	return runCmdStreamOutput("docker", "run", "--rm", "--name", "auto-analysis", "-p", fmt.Sprintf("%d:%d", port, port), "auto-analysis")
+}
+
 func main() {
 	image := "ubuntu:jammy"
 	implantrepo := "https://github.com/LouisH-760/auto-analysis"
 	mods := modules()
 	sample := flag.String("sample", "", "Path to the sample. Must be in the docker context.")
 	modfolder := flag.String("modules", "", "path to the modules folder. Must be in the docker context.")
+	runct := flag.Bool("run", false, "Start the docker container")
 	port := 8080
 	for name, mod := range mods {
 		// can't do mod[name].used directly, so use the object copy and assign it in place
@@ -166,5 +175,17 @@ func main() {
 	}
 	// copy modules folder locally
 	dockerfile := dockerFile(image, *sample, *modfolder, mods, port, implantrepo)
-	fmt.Printf("%s\n", dockerfile)
+	if *runct {
+
+		if err := build(); err != nil {
+			fmt.Printf("Error while building the container: %s\n", err.Error())
+			return
+		}
+		if err := run(port); err != nil {
+			fmt.Printf("Error while running the container: %s\n", err.Error())
+			return
+		}
+	} else {
+		fmt.Printf("%s\n", dockerfile)
+	}
 }
