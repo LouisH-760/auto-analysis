@@ -34,17 +34,17 @@ libraries = [
     ("advapi32.dll", "Registry access")
 ]
 
-with sqlite3.connect("susp.db") as dbcon:
-    cursor = dbcon.cursor()
+with sqlite3.connect("susp.db") as dbconn:
+    cursor = dbconn.cursor()
     # Create tables
     cursor.execute("CREATE TABLE process(name, path, desc)")
     cursor.execute("CREATE TABLE import(name, lib, desc)")
     cursor.execute("CREATE TABLE library(name, desc)")
     # Populate tables
     cursor.executemany("INSERT INTO process VALUES(?, ?, ?)", systemProcs)
-    dbcon.commit() # commit after each insertion
+    dbconn.commit() # commit after each insertion
     cursor.executemany("INSERT INTO import VALUES(?, ?, ?)", imports)
-    dbcon.commit()
+    dbconn.commit()
     cursor.executemany("INSERT INTO library VALUES(?, ?)", libraries)
-    dbcon.commit()
+    dbconn.commit()
     
