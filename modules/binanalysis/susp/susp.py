@@ -86,7 +86,7 @@ else:
         })
     for section in sectentropy["records"]:
         if section["entropy"] > 6.5:
-            out["other"].append({
+            out["sections"].append({
                 "name": section["name"],
                 "message": f"Section has unusually high entropy, might be packed: {section['entropy']}",
                 "raw": section
