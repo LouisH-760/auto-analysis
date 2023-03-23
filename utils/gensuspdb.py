@@ -6,7 +6,9 @@ import sqlite3
 # Example: lsass.exe in c:\Users\John\Documents and running in userland is probably not legit
 systemProcs = [
     ("lsass.exe", "C:\\Windows\\System32", "Local Security Authority Subsystem Service"),
-    ("csrss.exe", "C:\\Windows\\System32", "Client Server Runtime Subsystem")
+    ("csrss.exe", "C:\\Windows\\System32", "Client Server Runtime Subsystem"),
+    ("explorer.exe", "C:\\Windows\\explorer.exe", "User session"),
+    ("svchost.exe", "C:\\Windows\\System32", "Service Host")
 ]
 
 # Suspicious functions from libraries
