@@ -2,3 +2,5 @@ implant/modules
 docker-builder/modules
 Dockerfile
 sample.*
+*.exe
+*.bin
