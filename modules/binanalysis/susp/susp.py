@@ -67,4 +67,13 @@ else:
                 "message": f"The sample name matches with a windows system process, this might be an attempt at impersonation!: {matches[0]}",
                 "raw": matches
             })
+    cmd = ["diec", "-j", sample] # use diec to detect a packer
+    output = subprocess.run(cmd, stdout=subprocess.PIPE)
+    buildchain = json.loads(output.stdout.decode())["detects"][0]
+    for val in buildchain["values"]:
+        if val["type"] == "Packer":
+            out["other"].append({
+                "name": sample,
+                "message": f"The sample binary is packed using {val['name']}"
+            })
     print(json.dumps(out))
