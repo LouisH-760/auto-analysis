@@ -11,5 +11,5 @@ else:
     # Get binary information in a JSON format from rz-bin
     cmd = ["rz-bin", "-Ij", sample]
     output = subprocess.run(cmd, stdout=subprocess.PIPE)
-    infobj = json.loads(output.stdout.decode())
+    infobj = json.loads(output.stdout.decode())["info"]
     print(json.dumps(infobj), file=sys.stdout)
