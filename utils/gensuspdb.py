@@ -47,5 +47,4 @@ with sqlite3.connect("susp.db") as dbcon:
     dbcon.commit()
     cursor.executemany("INSERT INTO library VALUES(?, ?)", libraries)
     dbcon.commit()
-    dbcon.close()
     
