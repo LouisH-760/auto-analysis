@@ -2,8 +2,8 @@ import sqlite3
 
 # it would be nice to scrape this from somewhere online instead of having it hardcoded,
 # for the sake of accuracy and completeness...
-# Process systémes les plus communs, pour essaier de détecter si un exe a un nom suspect
-# par exemple: lsass.exe dans c:\Users\John\Documents est probablement suspect.
+# Common system processes, to attempt detection of malware masquerading as system processes
+# Example: lsass.exe in c:\Users\John\Documents and running in userland is probably not legit
 systemProcs = [
     ("lsass.exe", "C:\\Windows\\System32", "Local Security Authority Subsystem Service"),
     ("csrss.exe", "C:\\Windows\\System32", "Client Server Runtime Subsystem")
