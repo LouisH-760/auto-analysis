@@ -4,7 +4,7 @@ import base64
 import traceback
 import json
 try:
-    moduleandargs = base64.b64decode(sys.argv[-1].encode("ascii")).decode("ascii")
+    moduleandargs = base64.b64decode(sys.argv[-1].encode("ascii")).decode("ascii") # resilient to too many arguments
     # Get binary information in a JSON format from rz-bin
     cmd = ["python3"]
     cmd.extend(moduleandargs.split(" "))
