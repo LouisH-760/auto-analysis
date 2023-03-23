@@ -76,4 +76,19 @@ else:
                 "name": sample,
                 "message": f"The sample binary is packed using {val['name']}"
             })
+    cmd = ["diec", "-je", sample] # use diec to get entropy
+    output = subprocess.run(cmd, stdout=subprocess.PIPE)
+    sectentropy = json.loads(output.stdout.decode())
+    if sectentropy["total"] >= 6.5:
+        out["other"].append({
+            "name": sample,
+            "message": f"High overall entropy: might be packed ({sectentropy['total']})"
+        })
+    for section in sectentropy["records"]:
+        if section["entropy"] > 6.5:
+            out["other"].append({
+                "name": section["name"],
+                "message": f"Section has unusually high entropy, might be packed: {section['entropy']}",
+                "raw": section
+            })
     print(json.dumps(out))
