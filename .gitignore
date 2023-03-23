@@ -4,3 +4,4 @@ Dockerfile
 sample.*
 *.exe
 *.bin
+utils/*.db
