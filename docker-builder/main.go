@@ -57,6 +57,16 @@ func modules() map[string]module {
 			"rm clamav.deb",
 		},
 	}
+	mods["diec"] = module{
+		gitrepo: "https://github.com/horsicq/DIE-engine",
+		usegit:  false,
+		aptadds: []string{"libqt5script5", "libqt5scripttools5", "libqt5opengl5", "libqt5sql5"},
+		build: []string{
+			"wget https://github.com/horsicq/DIE-engine/releases/download/3.07/die_3.07_Ubuntu_22.04_amd64.deb -O die.deb",
+			"dpkg -i die.deb",
+			"rm die.deb",
+		},
+	}
 	return mods
 }
 
@@ -73,7 +83,7 @@ func aptList(mods map[string]module) []string {
 func buildcmd(mod module, name string) string {
 	fcmd := []string{}
 	if mod.usegit {
-		fcmd = append(fcmd, fmt.Sprintf("RUN git clone \"%s\" \"%s\"\nWORKDIR \"%s\"", mod.gitrepo, name, name))
+		fcmd = append(fcmd, fmt.Sprintf("RUN git clone --recursive \"%s\" \"%s\"\nWORKDIR \"%s\"", mod.gitrepo, name, name))
 	}
 	for _, cmd := range mod.build {
 		fcmd = append(fcmd, fmt.Sprintf("RUN %s", cmd))
@@ -106,7 +116,7 @@ func dockerFile(image string, sample string, modfolder string, mods map[string]m
 	copymods := fmt.Sprintf("COPY \"%s\" \"/autoa/modules/\"", modfolder)
 	// apt stuff
 	pkgs := aptList(mods)
-	aptcmd := fmt.Sprintf("RUN apt update && apt install -y %s", strings.Join(pkgs, " "))
+	aptcmd := fmt.Sprintf("ARG DEBIAN_FRONTEND=noninteractive\nENV TZ=Europe/Paris\nRUN apt update && apt install -y %s", strings.Join(pkgs, " "))
 	// build the implant
 	icmd := implantcmd(implantrepo)
 	// build commands for relevant packages
