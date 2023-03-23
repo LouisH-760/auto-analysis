@@ -8,7 +8,7 @@ if len(sys.argv) != 2:
     sys.exit(1)
 else:
     sample = b64decode(sys.argv[-1].encode('ascii')).decode('ascii')
-    # Get binary information in a JSON format from rz-bin
+    # Get sections information in JSON format from rz-bin
     cmd = ["rz-bin", "-Sj", sample]
     output = subprocess.run(cmd, stdout=subprocess.PIPE)
     infobj = json.loads(output.stdout.decode())["sections"]
