@@ -15,5 +15,6 @@ For now it will only run every step but in the futur we can imagine that there w
 
 ## TODO
 
-in the future availableModules will be generated automatically based on available python modules
+- in the future availableModules will be generated automatically based on available python modules
+- Make a functional tree interface for the build process
 
