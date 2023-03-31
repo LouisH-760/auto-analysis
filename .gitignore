@@ -1,6 +1,7 @@
 implant/modules
 docker-builder/modules
 Dockerfile
+gui/node_modules/
 sample.*
 *.exe
 *.bin
