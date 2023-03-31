@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AppBar from "@/layouts/AppBar.vue";
+import SideBar from "./layouts/SideBar.vue";
 const author = ref<String>("Louis Hermier | Nico Gruschke");
 </script>
 
@@ -11,6 +12,7 @@ const author = ref<String>("Louis Hermier | Nico Gruschke");
       <v-main>
         <v-row no-gutters class="h-100">
           <v-col cols="2">
+            <SideBar />
           </v-col>
           <v-col>
           </v-col>
