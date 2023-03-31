@@ -12,3 +12,8 @@ then you can build your chaine with the blocks available on you right and run it
 
 For now it will only run every step but in the futur we can imagine that there will the possibility to run just a portion and see the result.
 
+
+## TODO
+
+in the future availableModules will be generated automatically based on available python modules
+

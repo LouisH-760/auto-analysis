@@ -1,0 +1,63 @@
+[
+  {
+    "name": "volatility",
+    "components": [
+      {
+        "name": "imageinfo",
+        "type": "other",
+        "description": "The imageinfo output tells you the suggested profile that you should pass as the parameter to --profile=PROFILE when using other plugins.",
+        "has_result": true,
+        "input": ["file"],
+        "output": ["profile"],
+        "share_input": true
+      },
+      {
+        "name": "pstree",
+        "type": "other",
+        "description": "View the process listing in tree form",
+        "has_result": true,
+        "input": ["file", "profile"],
+        "output": ["pid"],
+        "share_input": true
+      },
+      {
+        "name": "pslist",
+        "type": "other",
+        "description": " List the processes of a system",
+        "has_result": true,
+        "input": ["file", "profile"],
+        "output": ["pid"],
+        "share_input": true
+      }
+    ]
+  },
+  {
+    "name": "rizin",
+    "components": [
+      {
+        "name": "binimport",
+        "type": "other",
+        "has_result": true,
+        "input": ["file"],
+        "output": [],
+        "share_input": true
+      },
+      {
+        "name": "bininfo",
+        "type": "other",
+        "has_result": true,
+        "input": ["file"],
+        "output": [],
+        "share_input": true
+      },
+      {
+        "name": "binsection",
+        "type": "other",
+        "has_result": true,
+        "input": ["file"],
+        "output": [],
+        "share_input": true
+      }
+    ]
+  }
+]
