@@ -10,7 +10,7 @@ else:
     memorydump = b64decode(sys.argv[-2].encode('ascii')).decode('ascii')
     profile = b64decode(sys.argv[-1].encode('ascii')).decode('ascii')
     # Get process list in a JSON format from volatility
-    cmd = ["volatility", "-f", memorydump, `--profile={0}`.format(profile), "pslist"]
+    cmd = ["volatility2", "-f", memorydump, "--output=json", f"--profile={profile}", "pslist"]
     output = subprocess.run(cmd, stdout=subprocess.PIPE)
     imginfo = json.loads(output.stdout.decode())
     print(json.dumps(imginfo), file=sys.stdout)

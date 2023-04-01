@@ -9,7 +9,7 @@ if len(sys.argv) != 2:
 else:
     memorydump = b64decode(sys.argv[-1].encode('ascii')).decode('ascii')
     # Get image information in a JSON format from volatility
-    cmd = ["volatility", "-f", memorydump]
+    cmd = ["volatility2", "-f", "--output=json", memorydump]
     output = subprocess.run(cmd, stdout=subprocess.PIPE)
-    imginfo = json.loads(output.stdout.decode())["info"]
+    imginfo = json.loads(output.stdout.decode())
     print(json.dumps(imginfo), file=sys.stdout)
