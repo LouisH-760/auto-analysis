@@ -5,12 +5,18 @@ This Project is the realisation of a gui to better use the auto analyser tool wh
 
 ## HOW To use it
 
+To run the gui you first need to run `npm run dev` in the futur this will hosted on a server.
+
 When lunched you can create a new analysis with the button new where you select a file to analyse.
 
 then you can build your chaine with the blocks available on you right and run it with the run button.
 
 
 For now it will only run every step but in the futur we can imagine that there will the possibility to run just a portion and see the result.
+
+## Important files
+
+- `src/data/AvailableModules` contains the list of the available module grouped by categories.
 
 
 ## TODO

@@ -1,3 +1,5 @@
+// Basic defenition of a module command like imageinfo, clamscan, bininfo,...
+
 export interface IAnalyserElement {
   name: string;
   description?: string;
