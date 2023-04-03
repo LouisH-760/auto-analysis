@@ -3,7 +3,7 @@ Automated binary / memory dump analysis
 
 
 
-## How To RUN
+## How to RUN the program
 
 ### **Prerequirement**
 
@@ -16,17 +16,17 @@ Automated binary / memory dump analysis
 
 #### **Launch the environment**
 
-To analyse a sample you need to be in the *auto-analyser* folder, and to copy the sample inside this folder because docker cannot read the path off parent folders.
+To analyse a sample you need to be in the *auto-analyser* folder, and to place the sample within this folder, as docker cannot copy files outside it's **environment** (the folder from which you are launching any docker command).
 
-the following command will create the docker environment with all the tools needed
+The following command will create a bare docker environment, when ran from the root of the repository. Run the docker-builder with the `-h` option to get an overview of which additional tools can be bundled in.
 
 ```sh 
 go run ./docker-build/ -sample="path_to_sample" -modules="./modules" --run
 ```
 
-but it will only include the modules scripts found in `./modules`, to include the modules installation we need to specify the modules in the command with `-module_name`.
+Again, this container will only include the modules scripts found in `./modules`, to include the module dependencies we need to specify them in the command with `-module_name`.
 
-Following modules/tools are possible to install:
+Following modules/tools are available for now:
 
 - **volatility2**
 - **rizin**
@@ -36,8 +36,7 @@ Following modules/tools are possible to install:
 
 #### **run the modules**
 
-to run a module you need to use a http request tool like postman,...
-where you will run the following request
+to run a module, you can use a http request tool like postman, where you will run the following request
 ```HTTP
 POST /run HTTP/1.1
 Host: localhost:8080
@@ -45,10 +44,10 @@ Content-Type: application/json
 
 {
     "name":"some_name",
-    "script":"path to module (debug/moddebug.py)",
-    "arguments":"arguments in base64"
+    "script":"path to module (eg. debug/moddebug.py)",
+    "arguments":"arguments (encoded as base64 if the module you want to use requires it)"
 }
 ```
 
-The responce will be the result of the command in base64.
+The response will be a JSON object, containing status information and the output of the module encoded with base64.
 
