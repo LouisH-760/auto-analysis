@@ -36,8 +36,9 @@ var pongResponse response = response{
 }
 
 func serverError(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusInternalServerError)
+	// w.WriteHeader(http.StatusInternalServerError)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
 	w.Write([]byte("{}")) // be polite and still send actual JSON back
 }
 
@@ -48,8 +49,9 @@ func sendResponse(res response, w http.ResponseWriter) {
 		serverError(w)
 		return
 	}
-	w.WriteHeader(res.StatusCode)
+	// w.WriteHeader(res.StatusCode)
 	w.Header().Set("Content-Type", "application/json") // seems to not be respected??
+	w.WriteHeader(res.StatusCode)
 	w.Write([]byte(out))
 }
 
